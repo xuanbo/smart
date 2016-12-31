@@ -1,4 +1,7 @@
+# gradle ignore
 .gradle/
 build/
 
+# idea ignore
 .idea/
+*.iml

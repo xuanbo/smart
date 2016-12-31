@@ -1,6 +1,6 @@
 package com.whut.smart.config;
 
-import com.whut.smart.support.valid.GlobalValidAdvice;
+import com.whut.smart.support.valid.GlobalValidation;
 import org.hibernate.validator.HibernateValidator;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
@@ -48,11 +48,11 @@ public class WebMvcValidConfig extends WebMvcConfigurerAdapter {
     /**
      * 注册全局数据校验Bean
      *
-     * @return GlobalValidAdvice
+     * @return GlobalValidation
      */
     @Bean
-    public GlobalValidAdvice globalValidAdvice() {
-        return new GlobalValidAdvice();
+    public GlobalValidation globalValidAdvice() {
+        return new GlobalValidation();
     }
 
 }

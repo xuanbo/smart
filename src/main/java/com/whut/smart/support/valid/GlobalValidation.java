@@ -1,5 +1,6 @@
 package com.whut.smart.support.valid;
 
+import com.whut.smart.dto.ResultDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
@@ -25,9 +26,9 @@ import java.util.Map;
  * Created by null on 2016/12/30.
  */
 @ControllerAdvice
-public class GlobalValidAdvice {
+public class GlobalValidation {
 
-    private static final Logger log = LoggerFactory.getLogger(GlobalValidAdvice.class);
+    private static final Logger log = LoggerFactory.getLogger(GlobalValidation.class);
 
     @Resource
     private MessageSource messageSource;
@@ -38,12 +39,12 @@ public class GlobalValidAdvice {
      * 因此，处理 MethodArgumentNotValidException 异常即可全局处理参数校验，而不需要每个方法中使用 BindingResult
      *
      * @param e MethodArgumentNotValidException，Spring会自动注入，包括原生的Servlet对象
-     * @return 参数校验失败信息
+     * @return ResultDto 参数校验失败信息
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public Map<String, Object> validationHandler(MethodArgumentNotValidException e) {
+    public ResultDto<Map<String, String>> validationHandler(MethodArgumentNotValidException e) {
         log.debug("参数校验异常处理");
         return processFieldErrors(e.getBindingResult());
     }
@@ -52,24 +53,24 @@ public class GlobalValidAdvice {
      * 处理字段错误
      *
      * @param result BindingResult，封装了错误信息
-     * @return Map，自定义错误信息。例如：
-     *          {"flag":false,"message":"字段校验失败","error":{"password":"长度需要在6和18之间","email":"必须是一个合法的邮件格式"}}
+     * @return ErrorDto，自定义错误信息
+     *          {"core":400,"message":"字段校验失败","result":{"password":"长度需要在6和18之间","email":"必须是一个合法的邮件格式"}}
      *          error中的值为实体的属性
      */
-    private Map<String, Object> processFieldErrors(BindingResult result) {
-        final Map<String, Object> error = new HashMap<>();
-        final Map<String, String> info = new HashMap<>();
+    private ResultDto<Map<String, String>> processFieldErrors(BindingResult result) {
+        ResultDto<Map<String, String>> errorDto = new ResultDto<>();
+        final Map<String, String> errorInfo = new HashMap<>();
         List<FieldError> fieldErrors = result.getFieldErrors();
         for (FieldError fieldError : fieldErrors) {
             String field = fieldError.getField();
             String fieldErrorMessage = resolveFieldError(fieldError);
             log.debug("{} => {}", field, fieldErrorMessage);
-            info.put(field, fieldErrorMessage);
+            errorInfo.put(field, fieldErrorMessage);
         }
-        error.put("flag", false);
-        error.put("message", "字段校验失败");
-        error.put("error", info);
-        return error;
+        errorDto.setCode(HttpStatus.BAD_REQUEST.value());
+        errorDto.setMessage("字段校验失败");
+        errorDto.setResult(errorInfo);
+        return errorDto;
     }
 
     /**
