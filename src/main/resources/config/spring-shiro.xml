@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-4.3.xsd">
+
+    <!-- 配置进行授权和认证的Realm -->
+    <bean id="myRealm" class="com.whut.smart.support.shiro.DefaultRealm" />
+
+    <!-- 配置缓存管理器 -->
+    <bean id="cacheManager" class="org.apache.shiro.cache.MemoryConstrainedCacheManager" />
+
+    <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+        <property name="cacheManager" ref="cacheManager" />
+        <property name="realm" ref="myRealm" />
+    </bean>
+
+    <!-- 配置 bean 后置处理器:  会自动的调用和Spring整合后各个组件的生命周期方法. -->
+    <bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/>
+
+    <!--配置shiroFilter bean: 该bean 的id必须和web.xml文件中配置的shiro filter 的 name 一致 -->
+    <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+        <!-- 装配 securityManager -->
+        <property name="securityManager" ref="securityManager"/>
+        <!-- 配置登录页面 -->
+        <property name="loginUrl" value="/login.jsp"/>
+        <!-- 登录成功后的页面 我使用了ajax登录认证，没什么卵用 -->
+        <property name="successUrl" value="/index.html"/>
+        <!-- 授权失败的页面 -->
+        <property name="unauthorizedUrl" value="/unauthorized.jsp"/>
+        <!-- 具体配置需要拦截哪些URL,以及访问对应的 URL 时使用什么 Shiro Filter进行拦截. -->
+        <property name="filterChainDefinitions">
+            <value>
+                /assets/** = anon
+                /login = anon
+                <!-- 配置登出： 使用logout过滤器 -->
+                /logout = logout
+                /user.jsp = roles[user]
+                /admin.jsp = roles[admin]
+                /** = authc
+            </value>
+        </property>
+    </bean>
+
+    <!-- shiro 注解 -->
+    <bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"
+          depends-on="lifecycleBeanPostProcessor" />
+    <bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+        <property name="securityManager" ref="securityManager" />
+    </bean>
+
+</beans>

@@ -73,7 +73,7 @@ public class GlobalControllerExceptionHandler {
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public ResultDto<?> httpRequestMethodNotSupportedExceptionHandler(HttpRequestMethodNotSupportedException e) {
-        log.debug("HttpRequestMethodNotSupportedException处理。原因 => {}", e.getMessage());
+        log.debug("HttpRequestMethodNotSupportedException处理。原因：", e.getMessage());
         ResultDto<String> errorDto = new ResultDto<>();
         errorDto.setCode(HttpStatus.BAD_REQUEST.value());
         errorDto.setMessage("不支持的请求的方法");
@@ -84,7 +84,7 @@ public class GlobalControllerExceptionHandler {
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public ResultDto<?> exceptionHandler(Exception e) {
-        log.debug("Exception处理。原因 => {}", e.getMessage());
+        log.debug("Exception处理。原因 => {}", e);
         ResultDto<String> errorDto = new ResultDto<>();
         errorDto.setCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
         errorDto.setMessage("出现错误");

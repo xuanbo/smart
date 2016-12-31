@@ -3,6 +3,6 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.whut.smart.dao.mybatis.UserDao">
     <select id="getByUsername" resultType="userDto">
-        select * from t_user
+        select * from t_user where username = #{username}
     </select>
 </mapper>
