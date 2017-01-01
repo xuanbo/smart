@@ -1,5 +1,7 @@
 package com.whut.smart.config;
 
+import org.apache.shiro.mgt.SecurityManager;
+import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.EnvironmentAware;
@@ -25,7 +27,7 @@ import org.springframework.web.servlet.view.JstlView;
 @Configuration
 @EnableWebMvc
 @Import({WebMvcValidConfig.class, WebMvcCorsConfig.class, WebMvcExceptionConfig.class, WebMvcJsonConfig.class})
-@ComponentScan(basePackages = {"com.whut.smart.controller"})
+@ComponentScan(basePackages = {"com.whut.smart.controller", "com.whut.smart.support.shiro.oAuth2.controller"})
 public class WebMvcConfig extends WebMvcConfigurerAdapter implements EnvironmentAware {
 
     private static final Logger log = LoggerFactory.getLogger(WebMvcConfig.class);
@@ -59,5 +61,12 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter implements Environment
         viewResolver.setSuffix(env.getProperty("mvc.view.suffix"));
         viewResolver.setViewClass(JstlView.class);
         return viewResolver;
+    }
+
+    @Bean
+    public AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor(SecurityManager securityManager) {
+        AuthorizationAttributeSourceAdvisor advisor =  new AuthorizationAttributeSourceAdvisor();
+        advisor.setSecurityManager(securityManager);
+        return advisor;
     }
 }

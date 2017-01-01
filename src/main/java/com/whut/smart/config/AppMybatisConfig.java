@@ -24,7 +24,6 @@ import java.io.IOException;
  * Created by null on 2016/12/30.
  */
 @Configuration
-@Import({AppDruidConfig.class})
 public class AppMybatisConfig implements EnvironmentAware {
 
     private Environment env;

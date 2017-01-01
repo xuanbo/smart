@@ -18,8 +18,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @Configuration
 @EnableAspectJAutoProxy
 @EnableTransactionManagement
-@Import({AppMybatisConfig.class})
-@ImportResource({"classpath:config/spring-shiro.xml"})
+@Import({AppMybatisConfig.class, AppJdbcTemplateConfig.class, AppDruidConfig.class})
+@ImportResource({"classpath:config/oAuth2/spring-shiro.xml"})
 @ComponentScan(basePackages = {"com.whut.smart.dao", "com.whut.smart.service"})
 @PropertySource("classpath:application.properties")
 public class AppConfig {
