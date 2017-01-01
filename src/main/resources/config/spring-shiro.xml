@@ -23,21 +23,36 @@
         <!-- 装配 securityManager -->
         <property name="securityManager" ref="securityManager"/>
         <!-- 配置登录页面 -->
-        <property name="loginUrl" value="/login.jsp"/>
+        <property name="loginUrl" value="/login"/>
         <!-- 登录成功后的页面 我使用了ajax登录认证，没什么卵用 -->
         <property name="successUrl" value="/index.html"/>
-        <!-- 授权失败的页面 -->
+        <!-- 授权失败的页面 我自定义了认证filter，授权失败返回json，没什么卵用 -->
         <property name="unauthorizedUrl" value="/unauthorized.jsp"/>
+        <!-- 自定义认证filter -->
+        <property name="filters">
+            <map>
+                <entry key="needAnyRole" value-ref="defaultAuthorizationFilter" />
+            </map>
+        </property>
         <!-- 具体配置需要拦截哪些URL,以及访问对应的 URL 时使用什么 Shiro Filter进行拦截. -->
         <property name="filterChainDefinitions">
             <value>
                 /assets/** = anon
-                /login = anon
+                /favicon.ico = anon
+                / = anon
+                /login* = anon
                 <!-- 配置登出： 使用logout过滤器 -->
                 /logout = logout
                 /user.jsp = roles[user]
                 /admin.jsp = roles[admin]
-                /** = authc
+                <!--
+                    /**
+                    如果设置为authc，rememberMe还是需要重新登录，
+                    如果设置为user，但是可能会造成session为空
+                    如果重写FormAuthenticationFilter，一旦cookie被盗用，那么就会冒用信息
+                    /** = user
+                 -->
+                /** = needAnyRole['USER', 'ADMIN']
             </value>
         </property>
     </bean>
@@ -48,5 +63,7 @@
     <bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
         <property name="securityManager" ref="securityManager" />
     </bean>
+
+    <bean id="defaultAuthorizationFilter" class="com.whut.smart.support.shiro.DefaultAuthorizationFilter" />
 
 </beans>

@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 /**
- * 不关闭HttpServletResponse
+ * 会关闭HttpServletResponse
  *
  * Created by null on 2016/12/31.
  */
@@ -18,11 +18,12 @@ public class ResponseWriter {
     }
 
     public void writerJson(String json) {
-        response.setContentType("application/json");
+        response.setContentType("application/json;charset=UTF-8");
         try {
             PrintWriter writer = response.getWriter();
             writer.write(json);
             writer.flush();
+            writer.close();
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -1,0 +1,13 @@
+package com.whut.smart.util;
+
+/**
+ * 检查null
+ *
+ * Created by null on 2017/1/1.
+ */
+public class CheckNull {
+
+    public static boolean isNull(String[] arr) {
+        return  arr == null || (arr.length == 0);
+    }
+}

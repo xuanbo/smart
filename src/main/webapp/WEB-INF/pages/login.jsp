@@ -3,11 +3,11 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8" />
-    <link type="text/css" rel="stylesheet"  href="assets/bootstrap/css/bootstrap.min.css" />
-    <link type="text/css" rel="stylesheet"  href="assets/custom/css/login.css" />
-    <script type="text/javascript" src="assets/jquery/jquery.min.js"></script>
-    <script type="text/javascript" src="assets/bootstrap/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="assets/custom/js/login.js"></script>
+    <link type="text/css" rel="stylesheet"  href="../../assets/bootstrap/css/bootstrap.min.css" />
+    <link type="text/css" rel="stylesheet"  href="../../assets/custom/css/login.css" />
+    <script type="text/javascript" src="../../assets/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="../../assets/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../assets/custom/js/login.js"></script>
     <title>登录</title>
 </head>
 <body>

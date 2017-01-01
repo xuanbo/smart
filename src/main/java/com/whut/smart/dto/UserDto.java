@@ -2,6 +2,7 @@ package com.whut.smart.dto;
 
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
+import org.springframework.data.annotation.Transient;
 
 import javax.validation.constraints.Pattern;
 import java.io.Serializable;
@@ -12,6 +13,7 @@ import java.io.Serializable;
 public class UserDto implements Serializable {
 
     private String id;
+
     @NotEmpty
     @Pattern(regexp = "[a-zA-Z_ 0-9]{6,18}")
     private String username;
@@ -19,6 +21,9 @@ public class UserDto implements Serializable {
     @NotEmpty
     @Length(min = 8, max = 18)
     private String password;
+
+    @Transient
+    private Boolean rememberMe = false;
 
     public String getId() {
         return id;
@@ -42,6 +47,14 @@ public class UserDto implements Serializable {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Boolean getRememberMe() {
+        return rememberMe;
+    }
+
+    public void setRememberMe(Boolean rememberMe) {
+        this.rememberMe = rememberMe;
     }
 
     @Override

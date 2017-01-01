@@ -20,9 +20,11 @@
            e.preventDefault();
            var username = $('#username').val();
            var password = $('#password').val();
+           var remember = $('#remember')[0].checked;
            var user = {
                username: username,
-               password: password
+               password: password,
+               rememberMe: remember
            };
            $.ajax({
                url: '/login',
