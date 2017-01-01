@@ -40,10 +40,6 @@
                                             <input type="password" name="password" id="password" class="form-control" placeholder="Password" />
                                             <span class="help-block"></span>
                                         </div>
-                                        <div class="form-group text-center">
-                                            <input type="checkbox" tabindex="3" class="" name="remember" id="remember">
-                                            <label for="remember"> 记住我 </label>
-                                        </div>
                                         <div class="form-group">
                                             <div class="row">
                                                 <div class="col-sm-6 col-sm-offset-3">

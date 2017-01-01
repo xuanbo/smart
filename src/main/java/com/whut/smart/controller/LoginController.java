@@ -50,7 +50,6 @@ public class LoginController {
             return resultDto;
         }
         UsernamePasswordToken token = new UsernamePasswordToken(userDto.getUsername(), userDto.getPassword());
-        token.setRememberMe(userDto.getRememberMe());
         subject.login(token);
         resultDto.setCode(HttpStatus.OK.value());
         resultDto.setMessage("认证成功");

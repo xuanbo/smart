@@ -26,7 +26,7 @@
         <property name="loginUrl" value="/login"/>
         <!-- 登录成功后的页面 我使用了ajax登录认证，没什么卵用 -->
         <property name="successUrl" value="/index.html"/>
-        <!-- 授权失败的页面 我自定义了认证filter，授权失败返回json，没什么卵用 -->
+        <!-- 授权失败的页面 我自定义了授权filter，授权失败返回json，没什么卵用 -->
         <property name="unauthorizedUrl" value="/unauthorized.jsp"/>
         <!-- 自定义认证filter -->
         <property name="filters">
@@ -64,6 +64,7 @@
         <property name="securityManager" ref="securityManager" />
     </bean>
 
+    <!-- 自定义授权filter，不具备角色则返回json -->
     <bean id="defaultAuthorizationFilter" class="com.whut.smart.support.shiro.DefaultAuthorizationFilter" />
 
 </beans>

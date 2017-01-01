@@ -14,7 +14,6 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.PrintWriter;
 import java.util.Arrays;
 
 /**
@@ -33,6 +32,16 @@ public class DefaultAuthorizationFilter extends AuthorizationFilter {
         String uri = httpServletRequest.getRequestURI();
         log.debug("请求uri => {}, remoteAddress => {}", uri, httpServletRequest.getRemoteAddr());
         Subject subject = getSubject(request, response);
+        // 没有认证
+        if (!subject.isAuthenticated()) {
+            ResultDto<String> resultDto = new ResultDto<>();
+            resultDto.setCode(HttpStatus.UNAUTHORIZED.value());
+            resultDto.setMessage("没有认证");
+            resultDto.setResult("请进行登录授权");
+            // 发送json
+            new ResponseWriter(httpServletResponse).writerJson(JsonUtil.toJson(resultDto));
+            return true;
+        }
         // 访问需要的角色
         String[] roles = (String[]) mappedValue;
         log.debug("访问需要的角色 => {}", Arrays.toString(roles));
@@ -51,6 +60,7 @@ public class DefaultAuthorizationFilter extends AuthorizationFilter {
         ResultDto<String> resultDto = new ResultDto<>();
         resultDto.setCode(HttpStatus.FORBIDDEN.value());
         resultDto.setMessage("访问被拒绝");
+        resultDto.setResult("权限不足");
         // 发送json
         new ResponseWriter(httpServletResponse).writerJson(JsonUtil.toJson(resultDto));
         return false;
