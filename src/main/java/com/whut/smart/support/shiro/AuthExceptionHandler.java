@@ -4,6 +4,7 @@ import com.whut.smart.dto.ResultDto;
 import com.whut.smart.support.valid.GlobalValidation;
 import org.apache.shiro.authc.ExcessiveAttemptsException;
 import org.apache.shiro.authc.IncorrectCredentialsException;
+import org.apache.shiro.authc.LockedAccountException;
 import org.apache.shiro.authc.UnknownAccountException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -70,9 +71,27 @@ public class AuthExceptionHandler {
     public ResultDto<?> excessiveAttemptsExceptionHandler(ExcessiveAttemptsException e) {
         log.debug("ExcessiveAttemptsException处理。原因 => {}", e);
         ResultDto<String> resultDto = new ResultDto<>();
-        resultDto.setCode(HttpStatus.FORBIDDEN.value());
+        resultDto.setCode(HttpStatus.UNAUTHORIZED.value());
         resultDto.setMessage("失败尝试多余5次");
         resultDto.setResult("10分钟后再登录");
+        return resultDto;
+    }
+
+    /**
+     * 账号被锁定
+     *
+     * @param e LockedAccountException
+     * @return ResultDto
+     */
+    @ExceptionHandler(LockedAccountException.class)
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public ResultDto<?> lockedAccountExceptionHandler(LockedAccountException e) {
+        log.debug("LockedAccountException处理。原因 => {}", e);
+        ResultDto<String> resultDto = new ResultDto<>();
+        resultDto.setCode(HttpStatus.UNAUTHORIZED.value());
+        resultDto.setMessage("账号已被锁定");
+        resultDto.setResult("请联系管理员");
         return resultDto;
     }
 }

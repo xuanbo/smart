@@ -4,11 +4,33 @@
     xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans-4.3.xsd">
 
-    <!-- 配置进行授权和认证的Realm -->
-    <bean id="myRealm" class="com.whut.smart.support.shiro.DefaultRealm" />
+    <!-- 凭证匹配器 -->
+    <bean id="credentialsMatcher" class="com.whut.smart.support.shiro.RetryLimitHashedCredentialsMatcher">
+        <constructor-arg ref="cacheManager" />
+        <property name="hashAlgorithmName" value="md5" />
+        <property name="hashIterations" value="3" />
+        <property name="storedCredentialsHexEncoded" value="true" />
+    </bean>
 
-    <!-- 配置缓存管理器 -->
-    <bean id="cacheManager" class="org.apache.shiro.cache.MemoryConstrainedCacheManager" />
+    <!-- 配置进行授权和认证的Realm -->
+    <bean id="myRealm" class="com.whut.smart.support.shiro.DefaultRealm">
+        <property name="credentialsMatcher" ref="credentialsMatcher" />
+        <property name="cachingEnabled" value="true" />
+        <property name="authenticationCachingEnabled" value="true" />
+        <property name="authenticationCacheName" value="authenticationCache" />
+        <property name="authorizationCachingEnabled" value="true" />
+        <property name="authorizationCacheName" value="authorizationCache" />
+    </bean>
+
+    <!-- 配置缓存管理器 采用EhCache -->
+    <bean id="cacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
+        <property name="cacheManager" ref="ehCacheManager" />
+    </bean>
+
+    <bean id="ehCacheManager" class ="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+        <property name="configLocation" value="classpath:config/shiro-ehcache.xml" />
+        <property name="shared" value="true" />
+    </bean>
 
     <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
         <property name="cacheManager" ref="cacheManager" />
@@ -17,6 +39,9 @@
 
     <!-- 配置 bean 后置处理器:  会自动的调用和Spring整合后各个组件的生命周期方法. -->
     <bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/>
+
+    <!-- 自定义授权filter，不具备角色则返回json -->
+    <bean id="defaultAuthorizationFilter" class="com.whut.smart.support.shiro.DefaultAuthorizationFilter" />
 
     <!--配置shiroFilter bean: 该bean 的id必须和web.xml文件中配置的shiro filter 的 name 一致 -->
     <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
@@ -52,7 +77,7 @@
                     如果重写FormAuthenticationFilter，一旦cookie被盗用，那么就会冒用信息
                     /** = user
                  -->
-                /** = needAnyRole['USER', 'ADMIN']
+                /** = needAnyRole['ROLE_USER', 'ROLE_ADMIN']
             </value>
         </property>
     </bean>
@@ -63,8 +88,5 @@
     <bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
         <property name="securityManager" ref="securityManager" />
     </bean>
-
-    <!-- 自定义授权filter，不具备角色则返回json -->
-    <bean id="defaultAuthorizationFilter" class="com.whut.smart.support.shiro.DefaultAuthorizationFilter" />
 
 </beans>
