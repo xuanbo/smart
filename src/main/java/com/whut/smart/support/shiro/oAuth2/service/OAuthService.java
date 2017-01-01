@@ -21,6 +21,6 @@ public interface OAuthService {
     //auth code / access token 过期时间
     long getExpireIn();
 
-    public boolean checkClientId(String clientId);
-    public boolean checkClientSecret(String clientSecret);
+    boolean checkClientId(String clientId);
+    boolean checkClientSecret(String clientSecret);
 }

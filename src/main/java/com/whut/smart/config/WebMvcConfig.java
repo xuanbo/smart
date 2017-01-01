@@ -8,6 +8,7 @@ import org.springframework.context.EnvironmentAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.env.Environment;
 import org.springframework.web.servlet.ViewResolver;
@@ -26,6 +27,7 @@ import org.springframework.web.servlet.view.JstlView;
  */
 @Configuration
 @EnableWebMvc
+@EnableAspectJAutoProxy(proxyTargetClass = true)
 @Import({WebMvcValidConfig.class, WebMvcCorsConfig.class, WebMvcExceptionConfig.class, WebMvcJsonConfig.class})
 @ComponentScan(basePackages = {"com.whut.smart.controller", "com.whut.smart.support.shiro.oAuth2.controller"})
 public class WebMvcConfig extends WebMvcConfigurerAdapter implements EnvironmentAware {
@@ -63,10 +65,4 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter implements Environment
         return viewResolver;
     }
 
-    @Bean
-    public AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor(SecurityManager securityManager) {
-        AuthorizationAttributeSourceAdvisor advisor =  new AuthorizationAttributeSourceAdvisor();
-        advisor.setSecurityManager(securityManager);
-        return advisor;
-    }
 }

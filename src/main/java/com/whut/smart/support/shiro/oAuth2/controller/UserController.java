@@ -28,7 +28,7 @@ public class UserController {
     private HttpServletRequest request;
 
     /*
-     * 已废弃，代码写的太丑，我这暴脾气肯定要重构
+     * 已废弃，不处理异常，到时候统一处理
      * 来自开涛的博客
      */
     /*

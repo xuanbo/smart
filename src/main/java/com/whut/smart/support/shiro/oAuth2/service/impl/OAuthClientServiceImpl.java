@@ -3,6 +3,7 @@ package com.whut.smart.support.shiro.oAuth2.service.impl;
 import com.whut.smart.support.shiro.oAuth2.dao.OAuthClientDao;
 import com.whut.smart.support.shiro.oAuth2.dto.OAuthClientDto;
 import com.whut.smart.support.shiro.oAuth2.service.OAuthClientService;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

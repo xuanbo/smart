@@ -38,22 +38,22 @@ public class LoginController {
      * @param userDto UserDto
      * @return ResultDto
      */
-//    @PostMapping("/login")
-//    @ResponseBody
-//    public ResultDto<String> login(@Valid @RequestBody UserDto userDto) {
-//        ResultDto<String> resultDto = new ResultDto<>();
-//        Subject subject = SecurityUtils.getSubject();
-//        if (subject.isAuthenticated()) {
-//            resultDto.setCode(HttpStatus.OK.value());
-//            resultDto.setMessage("认证成功");
-//            resultDto.setResult("请不要重复登录");
-//            return resultDto;
-//        }
-//        UsernamePasswordToken token = new UsernamePasswordToken(userDto.getUsername(), userDto.getPassword());
-//        subject.login(token);
-//        resultDto.setCode(HttpStatus.OK.value());
-//        resultDto.setMessage("认证成功");
-//        resultDto.setResult("通过表单登录");
-//        return resultDto;
-//    }
+    @PostMapping("/login")
+    @ResponseBody
+    public ResultDto<String> login(@Valid @RequestBody UserDto userDto) {
+        ResultDto<String> resultDto = new ResultDto<>();
+        Subject subject = SecurityUtils.getSubject();
+        if (subject.isAuthenticated()) {
+            resultDto.setCode(HttpStatus.OK.value());
+            resultDto.setMessage("认证成功");
+            resultDto.setResult("请不要重复登录");
+            return resultDto;
+        }
+        UsernamePasswordToken token = new UsernamePasswordToken(userDto.getUsername(), userDto.getPassword());
+        subject.login(token);
+        resultDto.setCode(HttpStatus.OK.value());
+        resultDto.setMessage("认证成功");
+        resultDto.setResult("通过表单登录");
+        return resultDto;
+    }
 }

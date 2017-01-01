@@ -58,6 +58,10 @@
         <property name="loginUrl" value="/login"/>
     </bean>
 
+    <!-- access_token授权filter -->
+    <bean id="accessTokenAuthorizationFilter"
+          class="com.whut.smart.support.shiro.oAuth2.filter.AccessTokenAuthorizationFilter" />
+
     <!-- Shiro的Web过滤器 -->
     <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
         <property name="securityManager" ref="securityManager"/>
@@ -65,6 +69,7 @@
         <property name="filters">
             <map>
                 <entry key="authc" value-ref="formAuthenticationFilter" />
+                <entry key="accessTokenAuthc" value-ref="accessTokenAuthorizationFilter" />
             </map>
         </property>
         <property name="filterChainDefinitions">
@@ -76,7 +81,10 @@
 
                 /authorize = anon
                 /accessToken = anon
-                /userInfo = anon
+                /api/userInfo = anon
+
+                <!-- 访问该url下的需要携带有效的access_token，并且具备角色 -->
+                /client/** = accessTokenAuthc['ROLE_USER']
                 /** = authc
             </value>
         </property>
@@ -84,5 +92,12 @@
 
     <!-- Shiro生命周期处理器-->
     <bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/>
+
+    <!-- shiro 注解 -->
+    <bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"
+          depends-on="lifecycleBeanPostProcessor" />
+    <bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+        <property name="securityManager" ref="securityManager" />
+    </bean>
 
 </beans>
