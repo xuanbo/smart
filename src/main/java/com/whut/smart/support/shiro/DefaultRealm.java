@@ -1,11 +1,17 @@
 package com.whut.smart.support.shiro;
 
+import com.whut.smart.config.Constants;
 import com.whut.smart.dto.UserDto;
 import com.whut.smart.service.UserService;
-import org.apache.shiro.authc.*;
+import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.AuthenticationInfo;
+import org.apache.shiro.authc.AuthenticationToken;
+import org.apache.shiro.authc.SimpleAuthenticationInfo;
+import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
+import org.apache.shiro.util.ByteSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,6 +49,16 @@ public class DefaultRealm extends AuthorizingRealm {
         if (userDto == null) {
             throw new UnknownAccountException("账号不存在");
         }
-        return new SimpleAuthenticationInfo(username, userDto.getPassword(), getName());
+        return new SimpleAuthenticationInfo(username, userDto.getPassword(), getCredentialsSalt(username), getName());
+    }
+
+    /**
+     * 加密salt，这里是username + salt
+     *
+     * @param username 用户名
+     * @return username + salt
+     */
+    private ByteSource getCredentialsSalt(String username) {
+        return ByteSource.Util.bytes(username + Constants.SALT);
     }
 }

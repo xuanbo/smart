@@ -10,4 +10,5 @@ import java.nio.charset.Charset;
 public class Constants {
     public static final String CHARACTER_ENCODING = "UTF-8";
     public static final Charset CHARACTER_CHARSET = Charset.forName(CHARACTER_ENCODING);
+    public static final String SALT = "0123456789";
 }
