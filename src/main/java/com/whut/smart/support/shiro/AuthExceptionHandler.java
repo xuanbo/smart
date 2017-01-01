@@ -2,6 +2,7 @@ package com.whut.smart.support.shiro;
 
 import com.whut.smart.dto.ResultDto;
 import com.whut.smart.support.valid.GlobalValidation;
+import org.apache.shiro.authc.ExcessiveAttemptsException;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UnknownAccountException;
 import org.slf4j.Logger;
@@ -34,10 +35,10 @@ public class AuthExceptionHandler {
     @ResponseBody
     public ResultDto<?> unknownAccountExceptionHandler(UnknownAccountException e) {
         log.debug("UnknownAccountException处理。原因 => {}", e.getMessage());
-        ResultDto<String> errorDto = new ResultDto<>();
-        errorDto.setCode(HttpStatus.UNAUTHORIZED.value());
-        errorDto.setMessage("用户名不存在");
-        return errorDto;
+        ResultDto<String> resultDto = new ResultDto<>();
+        resultDto.setCode(HttpStatus.UNAUTHORIZED.value());
+        resultDto.setMessage("用户名不存在");
+        return resultDto;
     }
 
     /**
@@ -51,9 +52,27 @@ public class AuthExceptionHandler {
     @ResponseBody
     public ResultDto<?> incorrectCredentialsExceptionHandler(IncorrectCredentialsException e) {
         log.debug("IncorrectCredentialsException处理。原因 => {}", e.getMessage());
-        ResultDto<String> errorDto = new ResultDto<>();
-        errorDto.setCode(HttpStatus.UNAUTHORIZED.value());
-        errorDto.setMessage("密码不正确");
-        return errorDto;
+        ResultDto<String> resultDto = new ResultDto<>();
+        resultDto.setCode(HttpStatus.UNAUTHORIZED.value());
+        resultDto.setMessage("密码不正确");
+        return resultDto;
+    }
+
+    /**
+     * 失败尝试多次异常
+     *
+     * @param e ExcessiveAttemptsException
+     * @return ResultDto
+     */
+    @ExceptionHandler(ExcessiveAttemptsException.class)
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public ResultDto<?> excessiveAttemptsExceptionHandler(ExcessiveAttemptsException e) {
+        log.debug("ExcessiveAttemptsException处理。原因 => {}", e);
+        ResultDto<String> resultDto = new ResultDto<>();
+        resultDto.setCode(HttpStatus.FORBIDDEN.value());
+        resultDto.setMessage("失败尝试多余5次");
+        resultDto.setResult("10分钟后再登录");
+        return resultDto;
     }
 }
