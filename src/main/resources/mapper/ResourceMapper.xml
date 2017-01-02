@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.whut.smart.dao.mybatis.ResourceDao">
+
+    <resultMap id="ResourceResultMap" type="resourceDto">
+        <id column="r_id" property="id" jdbcType="BIGINT" />
+        <result column="r_url" property="url" jdbcType="VARCHAR" />
+        <result column="r_description" property="description" jdbcType="VARCHAR" />
+        <collection property="roleDtos" ofType="roleDto">
+            <id column="ro_id" property="id" jdbcType="BIGINT" />
+            <result column="ro_name" property="name" jdbcType="VARCHAR" />
+            <result column="ro_description" property="description" jdbcType="VARCHAR" />
+        </collection>
+    </resultMap>
+
+    <sql id="all_column">
+        r.id as r_id, r.url as r_url, r.description as r_description,
+        ro.id as ro_id, ro.name as ro_name, ro.description as ro_description
+    </sql>
+
+    <select id="getAll" resultMap="ResourceResultMap">
+        select <include refid="all_column" />
+        from t_resource r
+        left join t_role_resource rr on r.id = rr.resource_id
+        left join t_role ro on rr.role_id = ro.id
+    </select>
+
+</mapper>

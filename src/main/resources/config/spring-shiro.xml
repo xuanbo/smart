@@ -44,7 +44,9 @@
     <bean id="defaultAuthorizationFilter" class="com.whut.smart.support.shiro.DefaultAuthorizationFilter" />
 
     <!--配置shiroFilter bean: 该bean 的id必须和web.xml文件中配置的shiro filter 的 name 一致 -->
-    <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+    <!--<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">-->
+    <!-- 使用自定义的ShiroFilterFactoryBean，从数据库中读取FilterChains -->
+    <bean id="shiroFilter" class="com.whut.smart.support.shiro.DefaultShiroFilterFactoryBean">
         <!-- 装配 securityManager -->
         <property name="securityManager" ref="securityManager"/>
         <!-- 配置登录页面 -->
@@ -59,6 +61,8 @@
                 <entry key="needAnyRole" value-ref="defaultAuthorizationFilter" />
             </map>
         </property>
+        <!-- 数据库中用户过滤url的filter的别名，这里我使用的是DefaultAuthorizationFilter -->
+        <property name="filterAlias" value="needAnyRole" />
         <!-- 具体配置需要拦截哪些URL,以及访问对应的 URL 时使用什么 Shiro Filter进行拦截. -->
         <property name="filterChainDefinitions">
             <value>
@@ -68,8 +72,6 @@
                 /login* = anon
                 <!-- 配置登出： 使用logout过滤器 -->
                 /logout = logout
-                /user.jsp = roles[user]
-                /admin.jsp = roles[admin]
                 <!--
                     /**
                     如果设置为authc，rememberMe还是需要重新登录，
@@ -77,7 +79,10 @@
                     如果重写FormAuthenticationFilter，一旦cookie被盗用，那么就会冒用信息
                     /** = user
                  -->
-                /** = needAnyRole['ROLE_USER', 'ROLE_ADMIN']
+                <!--
+                    已经在数据库中配置needAnyRole，这里就不用配置文件了
+                    /** = needAnyRole['ROLE_USER', 'ROLE_ADMIN']
+                -->
             </value>
         </property>
     </bean>

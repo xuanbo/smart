@@ -9,15 +9,15 @@ import java.io.Serializable;
  */
 public class RoleDto implements Serializable {
 
-    private String id;
-    private String name;
+    private Long id;
+    private String name; //ROLE_XX
     private String description;
 
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -40,7 +40,7 @@ public class RoleDto implements Serializable {
     @Override
     public String toString() {
         return "RoleDto{" +
-                "id='" + id + '\'' +
+                "id=" + id +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 '}';

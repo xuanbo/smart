@@ -29,7 +29,8 @@ import org.springframework.web.servlet.view.JstlView;
 @EnableWebMvc
 @EnableAspectJAutoProxy(proxyTargetClass = true)
 @Import({WebMvcValidConfig.class, WebMvcCorsConfig.class, WebMvcExceptionConfig.class, WebMvcJsonConfig.class})
-@ComponentScan(basePackages = {"com.whut.smart.controller", "com.whut.smart.support.shiro.oAuth2.controller"})
+@ComponentScan(basePackages = {"com.whut.smart.controller"})
+//@ComponentScan(basePackages = {"com.whut.smart.controller", "com.whut.smart.support.shiro.oAuth2.controller"})
 public class WebMvcConfig extends WebMvcConfigurerAdapter implements EnvironmentAware {
 
     private static final Logger log = LoggerFactory.getLogger(WebMvcConfig.class);

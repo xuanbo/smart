@@ -13,7 +13,7 @@ import java.io.Serializable;
  */
 public class UserDto implements Serializable {
 
-    private String id;
+    private Long id;
 
     @NotEmpty
     @Pattern(regexp = "[a-zA-Z_ 0-9]{6,18}")
@@ -29,11 +29,11 @@ public class UserDto implements Serializable {
 
     private Boolean locked;
 
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -80,7 +80,7 @@ public class UserDto implements Serializable {
     @Override
     public String toString() {
         return "UserDto{" +
-                "id='" + id + '\'' +
+                "id=" + id +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
                 ", roleId='" + roleId + '\'' +
