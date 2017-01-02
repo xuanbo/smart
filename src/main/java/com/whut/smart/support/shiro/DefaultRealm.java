@@ -13,6 +13,7 @@ import org.apache.shiro.authc.SimpleAuthenticationInfo;
 import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
+import org.apache.shiro.cache.Cache;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.util.ByteSource;
@@ -78,5 +79,20 @@ public class DefaultRealm extends AuthorizingRealm {
      */
     private ByteSource getCredentialsSalt(String username) {
         return ByteSource.Util.bytes(username + Constants.SALT);
+    }
+
+    /**
+     * 根据用户名清除缓存
+     * 当用户的密码、认证状态、角色，权限信息更改后需要清除缓存
+     *
+     * @param username 用户名
+     */
+    public void clearCache(String username) {
+        // 认证cache
+        Cache<Object, Object> authenticationCache = getCacheManager().getCache(getAuthenticationCacheName());
+        authenticationCache.remove(username);
+        // 授权cache
+        Cache<Object, Object> authorizationCache = getCacheManager().getCache(getAuthorizationCacheName());
+        authorizationCache.remove(username);
     }
 }

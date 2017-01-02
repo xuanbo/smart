@@ -68,7 +68,7 @@ public class GlobalValidation {
             errorInfo.put(field, fieldErrorMessage);
         }
         errorDto.setCode(HttpStatus.BAD_REQUEST.value());
-        errorDto.setMessage("字段校验失败");
+        errorDto.setMessage("字段不合法");
         errorDto.setResult(errorInfo);
         return errorDto;
     }

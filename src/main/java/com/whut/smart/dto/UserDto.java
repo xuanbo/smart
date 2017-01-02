@@ -16,7 +16,7 @@ public class UserDto implements Serializable {
     private Long id;
 
     @NotEmpty
-    @Pattern(regexp = "[a-zA-Z_ 0-9]{6,18}")
+    @Pattern(regexp = "[a-zA-Z_0-9]{6,18}")
     private String username;
 
     @NotEmpty

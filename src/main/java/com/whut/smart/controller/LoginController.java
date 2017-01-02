@@ -2,6 +2,8 @@ package com.whut.smart.controller;
 
 import com.whut.smart.dto.ResultDto;
 import com.whut.smart.dto.UserDto;
+import com.whut.smart.service.AccessTokenService;
+import com.whut.smart.service.UserService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
@@ -12,7 +14,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.annotation.Resource;
 import javax.validation.Valid;
+import java.util.UUID;
 
 /**
  * login
@@ -21,6 +25,9 @@ import javax.validation.Valid;
  */
 @Controller
 public class LoginController {
+
+    @Resource
+    private UserService userService;
 
     /**
      * 登录页面
@@ -40,20 +47,7 @@ public class LoginController {
      */
     @PostMapping("/login")
     @ResponseBody
-    public ResultDto<String> login(@Valid @RequestBody UserDto userDto) {
-        ResultDto<String> resultDto = new ResultDto<>();
-        Subject subject = SecurityUtils.getSubject();
-        if (subject.isAuthenticated()) {
-            resultDto.setCode(HttpStatus.OK.value());
-            resultDto.setMessage("认证成功");
-            resultDto.setResult("请不要重复登录");
-            return resultDto;
-        }
-        UsernamePasswordToken token = new UsernamePasswordToken(userDto.getUsername(), userDto.getPassword());
-        subject.login(token);
-        resultDto.setCode(HttpStatus.OK.value());
-        resultDto.setMessage("认证成功");
-        resultDto.setResult("通过表单登录");
-        return resultDto;
+    public ResultDto<?> login(@Valid @RequestBody UserDto userDto) {
+        return userService.login(userDto);
     }
 }

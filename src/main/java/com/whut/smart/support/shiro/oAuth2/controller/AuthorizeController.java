@@ -21,6 +21,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -43,9 +44,11 @@ public class AuthorizeController {
     @Autowired
     private OAuthClientService oAuthClientService;
 
+    @Autowired
+    private HttpServletRequest request;
 
     @RequestMapping("/authorize")
-    public Object authorize(HttpServletRequest request) throws OAuthProblemException, OAuthSystemException, URISyntaxException {
+    public Object authorize(ModelMap modelMap) throws OAuthProblemException, OAuthSystemException, URISyntaxException {
         try {
             //构建OAuth 授权请求
             OAuthAuthzRequest oauthRequest = new OAuthAuthzRequest(request);
@@ -63,8 +66,9 @@ public class AuthorizeController {
             //如果用户没有登录，跳转到登陆页面
             if(!subject.isAuthenticated()) {
                 if(!login(subject, request)) {
-                    //登录失败时跳转到登陆页面
-//                    model.addAttribute("client", clientService.findByClientId(oauthRequest.getClientId()));
+                    //登录失败时跳转到登陆页面，设置clientName
+                    modelMap.addAttribute("clientName", oAuthClientService.getByClientId(oauthRequest.getClientId())
+                            .getClientName());
                     return "oauth2login";
                 }
             }

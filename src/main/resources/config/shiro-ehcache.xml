@@ -41,4 +41,12 @@
            overflowToDisk="false"
            statistics="true" />
 
+    <!-- 自己实现access_token，记住一周的时间 -->
+    <cache name="accessTokenCache"
+           maxElementsInMemory="10000"
+           timeToIdleSeconds="604800"
+           timeToLiveSeconds="0"
+           overflowToDisk="false"
+           statistics="true" />
+
 </ehcache>

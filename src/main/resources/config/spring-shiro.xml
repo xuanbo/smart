@@ -42,6 +42,8 @@
 
     <!-- 自定义授权filter，不具备角色则返回json -->
     <bean id="defaultAuthorizationFilter" class="com.whut.smart.support.shiro.DefaultAuthorizationFilter" />
+    <!-- 自定义授权filter，需要access_token才能访问，授权用户不具备角色则返回json -->
+    <bean id="defaultAccessTokenAuthorizationFilter" class="com.whut.smart.support.shiro.DefaultAccessTokenAuthorizationFilter" />
 
     <!--配置shiroFilter bean: 该bean 的id必须和web.xml文件中配置的shiro filter 的 name 一致 -->
     <!--<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">-->
@@ -59,10 +61,11 @@
         <property name="filters">
             <map>
                 <entry key="needAnyRole" value-ref="defaultAuthorizationFilter" />
+                <entry key="needAccessTokenAndAnyRole" value-ref="defaultAccessTokenAuthorizationFilter" />
             </map>
         </property>
         <!-- 数据库中用户过滤url的filter的别名，这里我使用的是DefaultAuthorizationFilter -->
-        <property name="filterAlias" value="needAnyRole" />
+        <property name="filterAlias" value="needAccessTokenAndAnyRole" />
         <!-- 具体配置需要拦截哪些URL,以及访问对应的 URL 时使用什么 Shiro Filter进行拦截. -->
         <property name="filterChainDefinitions">
             <value>
