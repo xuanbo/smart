@@ -1,6 +1,7 @@
 package com.whut.smart.context;
 
 import com.whut.smart.dto.UserDto;
+import com.whut.smart.util.CheckNull;
 
 /**
  * 用户上下文经过认证filter后可以获取到当前用户
@@ -17,5 +18,11 @@ public class UserContextHolder {
 
     public static UserDto get() {
         return userContext.get();
+    }
+
+    public static void remove() {
+        if (!CheckNull.isNull(userContext.get())) {
+            userContext.remove();
+        }
     }
 }

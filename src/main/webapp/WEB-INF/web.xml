@@ -5,6 +5,11 @@
     xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee
         http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
 
+    <!-- 自定义UserContext监听器，当Request销毁的时候清除UserContext信息 -->
+    <listener>
+        <listener-class>com.whut.smart.context.UserContextListener</listener-class>
+    </listener>
+
     <!-- The filter-name matches name of a 'shiroFilter' bean inside applicationContext.xml -->
     <filter>
         <filter-name>shiroFilter</filter-name>
